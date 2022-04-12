@@ -8,7 +8,7 @@ import com.sqre.app.vo.CartVO;
 
 public interface CartService {
 
-    void addItemToCart(CartVO cart);
+    Cart addItemToCart(CartVO cart);
 
-    List<Cart> listCartItems();
+    List<CartVO> listCartItems();
 }

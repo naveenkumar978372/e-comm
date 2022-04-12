@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,22 +25,21 @@ public class CartController {
         this.cartService = cartService;
     }
 
-
-    @RequestMapping(value = "/item", method = RequestMethod.POST, produces = "application/json")
+    @PostMapping(value = "/item")
     public ResponseEntity<Object> addItemToCart(@RequestBody CartVO cart) {
 
         if (Objects.isNull(cart)) {
             return ResponseEntity.noContent().build();
         }
 
-        cartService.addItemToCart(cart);
+        Cart cartResponse = cartService.addItemToCart(cart);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(cartResponse);
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public ResponseEntity<List<Cart>> listCartItems() {
-        List<Cart> carts = cartService.listCartItems();
+    @GetMapping(value = "/items")
+    public ResponseEntity<List<CartVO>> listCartItems() {
+        List<CartVO> carts = cartService.listCartItems();
 
         if (CollectionUtils.isEmpty(carts)) {
             return ResponseEntity.noContent().build();
@@ -50,13 +48,14 @@ public class CartController {
         return ResponseEntity.ok(carts);
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.POST)
+    @PostMapping(value = "/items")
     public ResponseEntity<Object> removeAllCartItems() {
+
 
         return new ResponseEntity<>(new Object(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/checkout-value", method = RequestMethod.GET)
+    @GetMapping(value = "/checkout-value")
     public ResponseEntity<Object> calculateTotalValue() {
 
         return new ResponseEntity<>(new Object(), HttpStatus.OK);

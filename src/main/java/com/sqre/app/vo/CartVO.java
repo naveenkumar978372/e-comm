@@ -11,4 +11,5 @@ public class CartVO {
 
     int product_id;
     int quantity;
+    String description;
 }

@@ -6,7 +6,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cart {
 
     @Id
@@ -17,6 +27,6 @@ public class Cart {
     private Integer productId;
 
     @Column(name = "quantity")
-    private Long quantity;
+    private Integer quantity;
 
 }
