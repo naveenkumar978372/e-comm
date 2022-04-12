@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Status {
-
-    String status;
-    ProductVO productVO;
-    String message;
+public class EmptyCartVO {
+    String action;
 }

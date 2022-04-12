@@ -11,4 +11,6 @@ public interface CartService {
     Cart addItemToCart(CartVO cart);
 
     List<CartVO> listCartItems();
+
+    void removeCartItems();
 }

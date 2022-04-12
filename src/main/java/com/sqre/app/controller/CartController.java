@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.sqre.app.model.Cart;
 import com.sqre.app.service.CartService;
 import com.sqre.app.vo.CartVO;
+import com.sqre.app.vo.EmptyCartVO;
+import com.sqre.app.vo.Status;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +36,9 @@ public class CartController {
 
         Cart cartResponse = cartService.addItemToCart(cart);
 
-        return ResponseEntity.ok(cartResponse);
+        return Objects.isNull(cartResponse) ?
+            ResponseEntity.noContent().build() :
+            ResponseEntity.ok(cartResponse);
     }
 
     @GetMapping(value = "/items")
@@ -49,10 +53,19 @@ public class CartController {
     }
 
     @PostMapping(value = "/items")
-    public ResponseEntity<Object> removeAllCartItems() {
+    public ResponseEntity<Status> removeAllCartItems(@RequestBody EmptyCartVO emptyCartVO) {
 
+        if (!Objects.equals(emptyCartVO.getAction(), "empty_cart")) {
+            return ResponseEntity.noContent().build();
+        }
 
-        return new ResponseEntity<>(new Object(), HttpStatus.OK);
+        cartService.removeCartItems();
+
+        Status success = Status.builder()
+            .message("All items have been removed from the cart !")
+            .status("success").build();
+
+        return ResponseEntity.ok(success);
     }
 
     @GetMapping(value = "/checkout-value")

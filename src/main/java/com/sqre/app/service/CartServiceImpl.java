@@ -1,7 +1,6 @@
 package com.sqre.app.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +40,7 @@ public class CartServiceImpl implements CartService {
 
         Status status = restTemplate.exchange(URL + cart.getProduct_id(), HttpMethod.GET, entity, Status.class).getBody();
 
-        if (status != null || Objects.equals(status.getStatus(), "error")) {
+        if (status == null || Objects.equals(status.getStatus(), "error")) {
             return null;
         }
 
@@ -77,5 +76,10 @@ public class CartServiceImpl implements CartService {
         });
 
         return cartVOList;
+    }
+
+    @Override
+    public void removeCartItems() {
+        cartRepository.deleteAll();
     }
 }
