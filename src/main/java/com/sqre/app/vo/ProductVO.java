@@ -7,29 +7,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ProductVO {
+public class ProductVO extends BaseVO {
 
-    Integer id;
+    int id;
     String name;
-    Long price;
+    long price;
     String description;
     String category;
     String image;
-    Long discount_percentage;
-    Long weight_in_grams;
+    long discountPercentage;
+    long weightInGrams;
 
-
-    /*{
-        "status": "success",
-        "product": {
-        "id": 100,
-            "name": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-            "price": 109.95,
-            "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-            "category": "men's clothing",
-            "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-            "discount_percentage": 3.2,
-            "weight_in_grams": 670
+    public ProductVO(int id, String name, long price,
+                     String description, String category,
+                     String image, long discountPercentage,
+                     long weightInGrams) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.image = image;
+        this.discountPercentage = discountPercentage;
+        this.weightInGrams = weightInGrams;
     }
-    }*/
 }

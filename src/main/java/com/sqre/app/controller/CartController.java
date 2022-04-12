@@ -5,16 +5,16 @@ import java.util.Objects;
 
 import com.sqre.app.model.Cart;
 import com.sqre.app.service.CartService;
+import com.sqre.app.vo.BaseVO;
 import com.sqre.app.vo.CartVO;
 import com.sqre.app.vo.EmptyCartVO;
-import com.sqre.app.vo.Status;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,7 +28,7 @@ public class CartController {
     }
 
     @PostMapping(value = "/item")
-    public ResponseEntity<Object> addItemToCart(@RequestBody CartVO cart) {
+    public ResponseEntity<BaseVO> addItemToCart(@RequestBody CartVO cart) {
 
         if (Objects.isNull(cart)) {
             return ResponseEntity.noContent().build();
@@ -37,8 +37,14 @@ public class CartController {
         Cart cartResponse = cartService.addItemToCart(cart);
 
         return Objects.isNull(cartResponse) ?
-            ResponseEntity.noContent().build() :
-            ResponseEntity.ok(cartResponse);
+            ResponseEntity.badRequest().body(BaseVO
+                .builder()
+                .status("error")
+                .message("Invalid product id").build()) :
+            ResponseEntity.ok(BaseVO
+                .builder()
+                .status("success")
+                .message("Item has been added to cart").build());
     }
 
     @GetMapping(value = "/items")
@@ -49,28 +55,42 @@ public class CartController {
             return ResponseEntity.noContent().build();
         }
 
+
         return ResponseEntity.ok(carts);
     }
 
     @PostMapping(value = "/items")
-    public ResponseEntity<Status> removeAllCartItems(@RequestBody EmptyCartVO emptyCartVO) {
+    public ResponseEntity<BaseVO> removeAllCartItems(@RequestBody EmptyCartVO emptyCartVO) {
 
         if (!Objects.equals(emptyCartVO.getAction(), "empty_cart")) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.badRequest().build();
         }
 
         cartService.removeCartItems();
 
-        Status success = Status.builder()
+        BaseVO success = BaseVO.builder()
             .message("All items have been removed from the cart !")
-            .status("success").build();
+            .status("success")
+            .build();
 
         return ResponseEntity.ok(success);
     }
 
     @GetMapping(value = "/checkout-value")
-    public ResponseEntity<Object> calculateTotalValue() {
+    public ResponseEntity<BaseVO> calculateTotalValue(@RequestParam("shipping_postal_code") String shippingPostalCode) {
 
-        return new ResponseEntity<>(new Object(), HttpStatus.OK);
+        Long total = cartService.calculateTotalValue(shippingPostalCode);
+
+        if (total < 0) {
+            return ResponseEntity.badRequest().body(BaseVO.builder()
+                .message("Invalid postal code, valid ones are 465535 to 465545")
+                .status("error").build());
+        }
+
+        BaseVO success = BaseVO.builder()
+            .message("Total value of your shopping cart is - " + total)
+            .status("success").build();
+
+        return ResponseEntity.ok(success);
     }
 }

@@ -1,6 +1,5 @@
 package com.sqre.app.service;
 
-
 import java.util.List;
 
 import com.sqre.app.model.Cart;
@@ -13,4 +12,6 @@ public interface CartService {
     List<CartVO> listCartItems();
 
     void removeCartItems();
+
+    Long calculateTotalValue(String shippingPostalCode);
 }

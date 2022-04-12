@@ -7,9 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CartVO {
-
-    int product_id;
+public class CartVO extends BaseVO {
+    int productId;
     int quantity;
-    String description;
+
+    CartVO(int productId, int quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }
